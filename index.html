@@ -1,82 +1,88 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="es">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
     <title>Victor & Yuly</title>
-    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/hacker-tree/love-tree/css/default.css">
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hacker-tree/love-tree/js/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hacker-tree/love-tree/js/jscex.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hacker-tree/love-tree/js/jscex-parser.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hacker-tree/love-tree/js/jscex-jit.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hacker-tree/love-tree/js/jscex-builderbase.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hacker-tree/love-tree/js/jscex-async.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hacker-tree/love-tree/js/jscex-async-powerpack.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hacker-tree/love-tree/js/functions.js" charset="utf-8"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hacker-tree/love-tree/js/love.js" charset="utf-8"></script>
+    <style>
+        body { background-color: #fffaf0; margin: 0; overflow: hidden; font-family: 'Courier New', serif; }
+        #canvas { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); z-index: 1; }
+        #content { position: absolute; top: 10%; left: 5%; z-index: 10; width: 380px; background: rgba(255,255,255,0.7); padding: 25px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .names { font-size: 2.5em; color: #d63384; margin: 0; font-weight: bold; }
+        #clock-box { font-size: 1.2em; color: #555; margin-top: 15px; }
+        #clock { font-size: 1.5em; font-weight: bold; color: #ff4d6d; }
+        #message { font-size: 1.2em; color: #333; line-height: 1.6; font-style: italic; margin-top: 25px; border-left: 4px solid #ff4d6d; padding-left: 15px; }
+        .heart { color: #ff4d6d; }
+    </style>
 </head>
 <body>
-    <div id="main">
-        <div id="wrap">
-            <div id="text">
-                <div id="code">
-                    <span class="say">Para Yuly:</span><br><br>
-                    <span class="say">"Es curioso cómo cambian las cosas</span><br>
-                    <span class="say">cuando uno no las planea.</span><br><br>
-                    <span class="say">La verdad es que no buscaba nada</span><br>
-                    <span class="say">y te encontré,</span><br><br>
-                    <span class="say">y ahora te convertiste en mi todo."</span><br><br>
-                    <span class="say">Con amor, Victor ❤</span>
-                </div>
-            </div>
-            <div id="clock-box">
-                Victor <span class="heart">❤</span> Yuly
-                <div id="clock"></div>
-            </div>
-            <canvas id="canvas" width="1100" height="680"></canvas>
-        </div>
-        <iframe width="0" height="0" src="https://www.youtube.com/embed/j_q-90BfQpA?autoplay=1&start=45" frameborder="0" allow="autoplay"></iframe>
+
+<div id="content">
+    <h1 class="names">Victor & Yuly</h1>
+    <div id="clock-box">
+        Llevamos juntos:<br>
+        <span id="clock"></span>
     </div>
-    <script>
-    (function(){
-        var canvas = $('#canvas');
-        var width = canvas.width();
-        var height = canvas.height();
-        var seed = {x: width / 2 + 20, y: height - 20, color: "rgb(190, 26, 37)"};
-        var tree = new Tree(canvas[0], width, height, seed);
-        var runAnimate = eval(Jscex.compile("async", function () {
-            $await(seedAnimate());
-            $await(growAnimate());
-            $await(flowAnimate());
-            $await(moveAnimate());
-            textAnimate().start();
-        }));
-        var seedAnimate = eval(Jscex.compile("async", function () {
-            seed.draw();
-            while (seed.canScale()) { seed.scale(0.95); $await(Jscex.Async.sleep(10)); }
-            while (seed.canMove()) { seed.move(0, 2); $await(Jscex.Async.sleep(10)); }
-        }));
-        var growAnimate = eval(Jscex.compile("async", function () {
-            do { tree.grow(); $await(Jscex.Async.sleep(10)); } while (tree.canGrow());
-        }));
-        var flowAnimate = eval(Jscex.compile("async", function () {
-            do { tree.flower(2); $await(Jscex.Async.sleep(10)); } while (tree.canFlower());
-        }));
-        var moveAnimate = eval(Jscex.compile("async", function () {
-            tree.snapshot("p1", 240, 0, 610, 680);
-            while (tree.move("p1", 500, 0)) { $await(Jscex.Async.sleep(10)); }
-            tree.snapshot("p2", 500, 0, 610, 680);
-            $await(Jscex.Async.sleep(300));
-        }));
-        var textAnimate = eval(Jscex.compile("async", function () {
-            var together = new Date();
-            together.setFullYear(2025, 10, 7); // Noviembre es el mes 10
-            together.setHours(0, 0, 0, 0);
-            $("#code").show().typewriter();
-            $("#clock-box").fadeIn(500);
-            while (true) { timeElapse(together); $await(Jscex.Async.sleep(1000)); }
-        }));
-        runAnimate().start();
-    })();
-    </script>
+    <div id="message">
+        "Es curioso cómo cambian las cosas cuando uno no las planea. La verdad es que no buscaba nada y te encontré, y ahora te convertiste en mi todo, Yuly."
+    </div>
+</div>
+
+<canvas id="canvas"></canvas>
+
+<iframe width="0" height="0" src="https://www.youtube.com/embed/j_q-90BfQpA?autoplay=1&start=45" frameborder="0" allow="autoplay"></iframe>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // 1. EL CONTADOR (Configurado al 7 de Noviembre 2025)
+    function updateClock() {
+        const start = new Date(2025, 10, 7); // Noviembre es mes 10
+        const now = new Date();
+        const diff = now - start;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const mins = Math.floor((diff / (1000 * 60)) % 60);
+        const secs = Math.floor((diff / 1000) % 60);
+        document.getElementById('clock').innerHTML = days + "d " + hours + "h " + mins + "m " + secs + "s";
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // 2. ANIMACIÓN DEL ÁRBOL
+    function drawBranch(x, y, len, angle, branchWidth) {
+        ctx.beginPath();
+        ctx.save();
+        ctx.strokeStyle = "#4d2600";
+        ctx.lineWidth = branchWidth;
+        ctx.translate(x, y);
+        ctx.rotate(angle * Math.PI / 180);
+        ctx.moveTo(0, 0);
+        ctx.lineTo(0, -len);
+        ctx.stroke();
+
+        if (len < 10) {
+            ctx.fillStyle = "#ff4d6d";
+            ctx.beginPath();
+            ctx.arc(0, -len, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+            return;
+        }
+
+        setTimeout(() => {
+            drawBranch(0, -len, len * 0.8, angle - 18, branchWidth * 0.7);
+            drawBranch(0, -len, len * 0.8, angle + 18, branchWidth * 0.7);
+        }, 100);
+
+        ctx.restore();
+    }
+
+    window.onload = () => {
+        drawBranch(canvas.width / 2, canvas.height, 125, 0, 12);
+    };
+</script>
 </body>
 </html>
