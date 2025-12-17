@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Victor & Yuly</title>
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/hacker-tree/love-tree/css/default.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hacker-tree/love-tree/js/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hacker-tree/love-tree/js/jscex.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hacker-tree/love-tree/js/jscex-parser.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hacker-tree/love-tree/js/jscex-jit.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hacker-tree/love-tree/js/jscex-builderbase.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hacker-tree/love-tree/js/jscex-async.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hacker-tree/love-tree/js/jscex-async-powerpack.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hacker-tree/love-tree/js/functions.js" charset="utf-8"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hacker-tree/love-tree/js/love.js" charset="utf-8"></script>
+</head>
+<body>
+    <div id="main">
+        <div id="wrap">
+            <div id="text">
+                <div id="code">
+                    <span class="say">Para Yuly:</span><br><br>
+                    <span class="say">"Es curioso cómo cambian las cosas</span><br>
+                    <span class="say">cuando uno no las planea.</span><br><br>
+                    <span class="say">La verdad es que no buscaba nada</span><br>
+                    <span class="say">y te encontré,</span><br><br>
+                    <span class="say">y ahora te convertiste en mi todo."</span><br><br>
+                    <span class="say">Con amor, Victor ❤</span>
+                </div>
+            </div>
+            <div id="clock-box">
+                Victor <span class="heart">❤</span> Yuly
+                <div id="clock"></div>
+            </div>
+            <canvas id="canvas" width="1100" height="680"></canvas>
+        </div>
+        <iframe width="0" height="0" src="https://www.youtube.com/embed/j_q-90BfQpA?autoplay=1&start=45" frameborder="0" allow="autoplay"></iframe>
+    </div>
+    <script>
+    (function(){
+        var canvas = $('#canvas');
+        var width = canvas.width();
+        var height = canvas.height();
+        var seed = {x: width / 2 + 20, y: height - 20, color: "rgb(190, 26, 37)"};
+        var tree = new Tree(canvas[0], width, height, seed);
+        var runAnimate = eval(Jscex.compile("async", function () {
+            $await(seedAnimate());
+            $await(growAnimate());
+            $await(flowAnimate());
+            $await(moveAnimate());
+            textAnimate().start();
+        }));
+        var seedAnimate = eval(Jscex.compile("async", function () {
+            seed.draw();
+            while (seed.canScale()) { seed.scale(0.95); $await(Jscex.Async.sleep(10)); }
+            while (seed.canMove()) { seed.move(0, 2); $await(Jscex.Async.sleep(10)); }
+        }));
+        var growAnimate = eval(Jscex.compile("async", function () {
+            do { tree.grow(); $await(Jscex.Async.sleep(10)); } while (tree.canGrow());
+        }));
+        var flowAnimate = eval(Jscex.compile("async", function () {
+            do { tree.flower(2); $await(Jscex.Async.sleep(10)); } while (tree.canFlower());
+        }));
+        var moveAnimate = eval(Jscex.compile("async", function () {
+            tree.snapshot("p1", 240, 0, 610, 680);
+            while (tree.move("p1", 500, 0)) { $await(Jscex.Async.sleep(10)); }
+            tree.snapshot("p2", 500, 0, 610, 680);
+            $await(Jscex.Async.sleep(300));
+        }));
+        var textAnimate = eval(Jscex.compile("async", function () {
+            var together = new Date();
+            together.setFullYear(2025, 10, 7); // Noviembre es el mes 10
+            together.setHours(0, 0, 0, 0);
+            $("#code").show().typewriter();
+            $("#clock-box").fadeIn(500);
+            while (true) { timeElapse(together); $await(Jscex.Async.sleep(1000)); }
+        }));
+        runAnimate().start();
+    })();
+    </script>
+</body>
+</html>
